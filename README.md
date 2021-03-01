@@ -25,7 +25,7 @@ Replace the ListView with a RecyclerView. Upon tapping a recycler view cell, ope
 
 #### Exercise 2:
 
-Use Retrofit or a similar networking library to load the review information from a web resource (https://jsonblob.com/api/jsonBlob/c1a89a37-371e-11ea-a549-6f3544633231) instead of using the local data. You may use Gson or another parsing library.
+Use Retrofit or a similar networking library to load the review information from a web resource (https://jsonblob.com/api/jsonBlob/74b816e1-7ab6-11eb-becc-7588990e0458) instead of using the local data. You may use Gson or another parsing library.
 
 #### Extra Credit: 
 - Improve the project in any way you see fit (UX/UI, code structure, etc) and explain your enhancements in comments.
