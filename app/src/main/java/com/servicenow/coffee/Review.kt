@@ -2,11 +2,10 @@ package com.servicenow.coffee
 
 import com.servicenow.exercise.R
 
-class Review(
+data class Review(
     var name: String,
     var review: String,
     var rating: Int,
-    var location: String
 ) {
 
     override fun toString(): String {

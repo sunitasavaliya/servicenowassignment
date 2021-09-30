@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.MenuItem
 import com.servicenow.coffee.Review
 import com.servicenow.exercise.databinding.ActivityReviewDetailBinding
 
@@ -12,7 +13,6 @@ class ReviewDetailActivity : AppCompatActivity() {
         const val NAME_KEY = "NameKey"
         const val REVIEW_KEY = "ReviewKey"
         const val RATINGS_KEY = "RatingsKey"
-        const val LOCATION_KEY = "LocationKey"
 
         fun makeIntent(context: Context, review: Review): Intent {
 
@@ -20,7 +20,6 @@ class ReviewDetailActivity : AppCompatActivity() {
                 this.putExtra(NAME_KEY, review.name)
                 this.putExtra(REVIEW_KEY, review.review)
                 this.putExtra(RATINGS_KEY, review.rating)
-                this.putExtra(LOCATION_KEY, review.location)
             }
         }
     }
@@ -41,8 +40,6 @@ class ReviewDetailActivity : AppCompatActivity() {
             review = intent.getStringExtra(REVIEW_KEY) ?: throw IllegalArgumentException(
                 "Review is required"
             ),
-            location = intent.getStringExtra(LOCATION_KEY)
-                ?: throw IllegalArgumentException("Location is required"),
             rating = intent.getIntExtra(
                 RATINGS_KEY,
                 Int.MIN_VALUE
@@ -52,6 +49,17 @@ class ReviewDetailActivity : AppCompatActivity() {
         binding.image.setImageResource(Review.getIconResourceFromName(review.name))
         binding.name.text = review.name
         binding.review.text = review.review
-        binding.location.text = review.location
+        binding.rating.text = "⭐".repeat(review.rating)
+
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                finish()
+                return true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 }
