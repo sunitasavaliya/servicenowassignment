@@ -27,7 +27,7 @@ class ReviewListViewModel @Inject constructor(
 
     fun refresh() {
         viewState.postValue(ReviewListViewState(UILoadingState.refreshing, null))
-        disposables += repository.getAllReviews()
+        disposables.plusAssign(repository.getAllReviews()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
@@ -38,7 +38,7 @@ class ReviewListViewModel @Inject constructor(
                     viewState.postValue(ReviewListViewState(UILoadingState.error, null))
                 }
 
-            )
+            ))
     }
 
 
