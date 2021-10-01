@@ -49,7 +49,7 @@ class ReviewDetailActivity : AppCompatActivity() {
         binding.image.setImageResource(Review.getIconResourceFromName(review.name))
         binding.name.text = review.name
         binding.review.text = review.review
-        binding.rating.text = "⭐".repeat(review.rating)
+        binding.rating.text = review.rating.toFloat().toString()+" "+"⭐".repeat(review.rating)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }

@@ -65,7 +65,7 @@ class ReviewAdapter(private val clickCallBack : (Review) -> Unit) : ListAdapter<
             binding.image.setImageResource(Review.getIconResourceFromName(review.name))
             binding.name.text = review.name
             binding.review.text = review.review
-            binding.rating.text = "⭐".repeat(review.rating)
+            binding.rating.text = review.rating.toFloat().toString()+" "+"⭐".repeat(review.rating)
             itemView.setOnClickListener { clickCallBack(review) }
         }
     }
@@ -75,7 +75,7 @@ class ReviewDiffCallback : DiffUtil.ItemCallback<Review>() {
     override fun areItemsTheSame(
         oldItem: Review,
         newItem: Review
-    ) = oldItem == newItem //use .id if we have later to optimize.
+    ) = oldItem.name == newItem.name //Use Id if have
 
     override fun areContentsTheSame(
         oldItem: Review,

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_padding">16dp</dimen>
+    <dimen name="activity_margin">4dp</dimen>
+    <dimen name="item_revimg_width">45dp</dimen>
+    <dimen name="item_revimg_height">45dp</dimen>
+    <dimen name="activity_revimg_width">80dp</dimen>
+    <dimen name="activity_revimg_height">80dp</dimen>
+
+
+    <!-- font size -->
+    <dimen name="activity_rating_ftsz">10sp</dimen>
+
+</resources>
