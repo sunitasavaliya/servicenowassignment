@@ -1,4 +1,4 @@
-package com.servicenow.coffee
+package com.servicenow.model
 
 import com.servicenow.exercise.R
 
