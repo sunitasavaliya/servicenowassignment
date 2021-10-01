@@ -1,23 +1,26 @@
 package com.servicenow.exercise_kotlin
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.ViewGroup
-import android.widget.Toast
-import com.servicenow.model.Review
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.*
-import com.servicenow.coffee.RetrofitBuilder
-import com.servicenow.exercise.databinding.ActivityMainBinding
-import com.servicenow.exercise.databinding.ActivityMainBinding.inflate
-import com.servicenow.exercise.databinding.ReviewItemBinding
+import com.servicenow.exercise.databinding.ActivityReviewListBinding.inflate
+import android.view.View
+import androidx.activity.viewModels
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.servicenow.exercise.databinding.ActivityReviewListBinding
 import com.servicenow.ui.reviewdetail.ReviewDetailActivity
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
+import com.servicenow.ui.reviewslist.ReviewListAdapter
+import com.servicenow.ui.reviewslist.ReviewListViewModel
+import com.servicenow.ui.reviewslist.UILoadingState
 
+import dagger.hilt.android.AndroidEntryPoint
+
+@AndroidEntryPoint
 class ReviewListActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityMainBinding
+    private lateinit var binding: ActivityReviewListBinding
+
+    private val viewModel by viewModels<ReviewListViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,61 +28,44 @@ class ReviewListActivity : AppCompatActivity() {
         binding = inflate(layoutInflater)
         val view = binding.root
 
-        val adapter = ReviewAdapter { review ->
+        val adapter = ReviewListAdapter { review ->
             startActivity(ReviewDetailActivity.makeIntent(baseContext, review))
         }
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
         binding.recyclerView.addItemDecoration(DividerItemDecoration(binding.recyclerView.context, DividerItemDecoration.VERTICAL))
         binding.recyclerView.adapter = adapter
 
-        val disposable = RetrofitBuilder.apiService.getReviews()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(
-                { reviews ->
-                    adapter.submitList(reviews.toMutableList())
 
-                }, { error ->
-                    Toast.makeText(this, "Error getting reviews", Toast.LENGTH_SHORT).show()
+        binding.refreshButton.setOnClickListener {
+            viewModel.refresh()
+        }
+
+        viewModel.viewState.observe(this ) { viewState ->
+            when (viewState.loadingState) {
+                UILoadingState.initial -> {
+                    binding.recyclerView.visibility = View.GONE
+                    binding.loadingView.visibility = View.GONE
+                    binding.errorView.visibility = View.GONE
                 }
-
-            )
-
+                UILoadingState.refreshing -> {
+                    binding.recyclerView.visibility = View.GONE
+                    binding.loadingView.visibility = View.VISIBLE
+                    binding.errorView.visibility = View.GONE
+                }
+                UILoadingState.success -> {
+                    binding.recyclerView.visibility = View.VISIBLE
+                    binding.loadingView.visibility = View.GONE
+                    binding.errorView.visibility = View.GONE
+                    adapter.submitList(viewState.data?.toMutableList())
+                }
+                UILoadingState.error -> {
+                    binding.recyclerView.visibility = View.GONE
+                    binding.loadingView.visibility = View.GONE
+                    binding.errorView.visibility = View.VISIBLE
+                }
+            }
+        }
         setContentView(view)
     }
-}
 
-class ReviewAdapter(private val clickCallBack : (Review) -> Unit) : ListAdapter<Review, ReviewAdapter.ViewHolder>(ReviewDiffCallback()) {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(
-        ReviewItemBinding.inflate(
-            LayoutInflater.from(parent.context), parent, false
-        )
-    )
-
-    override fun onBindViewHolder(holder: ReviewAdapter.ViewHolder, position: Int) {
-        holder.bind(getItem(position), clickCallBack)
-    }
-
-    class ViewHolder(private val binding: ReviewItemBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-        fun bind(review: Review, clickCallBack: (Review) -> Unit) {
-            binding.image.setImageResource(Review.getIconResourceFromName(review.name))
-            binding.name.text = review.name
-            binding.review.text = review.review
-            binding.rating.text = review.rating.toFloat().toString()+" "+"⭐".repeat(review.rating)
-            itemView.setOnClickListener { clickCallBack(review) }
-        }
-    }
-}
-
-class ReviewDiffCallback : DiffUtil.ItemCallback<Review>() {
-    override fun areItemsTheSame(
-        oldItem: Review,
-        newItem: Review
-    ) = oldItem.name == newItem.name //Use Id if have
-
-    override fun areContentsTheSame(
-        oldItem: Review,
-        newItem: Review
-    ) = oldItem == newItem
 }

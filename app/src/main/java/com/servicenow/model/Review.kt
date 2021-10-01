@@ -24,5 +24,11 @@ data class Review(
             }
             return -1
         }
+        //Mapper function from network model to domain model
+        fun fromApiModel(apiReview: Review) : Review {
+            return Review(
+                apiReview.name, apiReview.review, apiReview.rating
+            )
+        }
     }
 }

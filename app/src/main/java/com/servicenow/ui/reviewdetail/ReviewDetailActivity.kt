@@ -26,7 +26,6 @@ class ReviewDetailActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityReviewDetailBinding
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
