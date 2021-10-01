@@ -1,5 +1,6 @@
 package com.servicenow.model
 
+import com.servicenow.api.ReviewPojo
 import com.servicenow.exercise.R
 
 data class Review(
@@ -25,7 +26,7 @@ data class Review(
             return -1
         }
         //Mapper function from network model to domain model
-        fun fromApiModel(apiReview: Review) : Review {
+        fun fromApiModel(apiReview: ReviewPojo) : Review {
             return Review(
                 apiReview.name, apiReview.review, apiReview.rating
             )

@@ -35,7 +35,6 @@ class ReviewListActivity : AppCompatActivity() {
         binding.recyclerView.addItemDecoration(DividerItemDecoration(binding.recyclerView.context, DividerItemDecoration.VERTICAL))
         binding.recyclerView.adapter = adapter
 
-
         binding.refreshButton.setOnClickListener {
             viewModel.refresh()
         }

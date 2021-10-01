@@ -12,13 +12,11 @@ class ReviewListAdapter(private val clickCallBack : (Review) -> Unit) : ListAdap
     ReviewDiffCallback()
 ) {
 
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(
         ReviewItemBinding.inflate(
             LayoutInflater.from(parent.context), parent, false
         )
     )
-
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(getItem(position), clickCallBack)
